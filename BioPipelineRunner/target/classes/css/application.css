@@ -1,0 +1,48 @@
+/ BioPipelineRunner/BioPipelineRunner/src/main/resources/css/application.css
+
+/* Global styles */
+body {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-base: #f0f0f0;
+}
+
+/* Header styles */
+.header {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+}
+
+/* Button styles */
+.button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+/* Input field styles */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-padding: 5px;
+}
+
+/* Result display styles */
+.results {
+    -fx-padding: 10px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+}
+
+/* Tree visualization styles */
+.tree {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+}

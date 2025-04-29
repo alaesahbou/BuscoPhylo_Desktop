@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="10" alignment="center">
+    <Label text="BioPipeline Runner" styleClass="header"/>
+    <GridPane hgap="10" vgap="10">
+        <Label text="Input Directory:"/>
+        <TextField fx:id="inputDirectoryField" promptText="Enter input directory"/>
+        
+        <Label text="Output Directory:"/>
+        <TextField fx:id="outputDirectoryField" promptText="Enter output directory"/>
+        
+        <Label text="BUSCO Parameters:"/>
+        <TextField fx:id="buscoParamsField" promptText="Enter BUSCO parameters"/>
+        
+        <Label text="Alignment Parameters:"/>
+        <TextField fx:id="alignmentParamsField" promptText="Enter alignment parameters"/>
+        
+        <Label text="Phylogeny Parameters:"/>
+        <TextField fx:id="phylogenyParamsField" promptText="Enter phylogeny parameters"/>
+        
+        <Button text="Run Pipeline" fx:id="runPipelineButton"/>
+    </GridPane>
+</VBox>
