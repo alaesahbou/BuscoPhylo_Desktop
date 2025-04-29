@@ -1,4 +1,4 @@
-# BioPipelineRunner
+# Busco Phylo Desktop
 
 BioPipelineRunner is a JavaFX-based desktop application designed to streamline bioinformatics workflows. This application provides a user-friendly interface for managing the execution of various bioinformatics tasks, including BUSCO analysis, sequence alignment, phylogenetic tree construction, and result visualization.
 
@@ -42,15 +42,6 @@ BioPipelineRunner is a JavaFX-based desktop application designed to streamline b
 3. Start the execution of the pipeline and monitor the progress.
 4. View and visualize the results once the execution is complete.
 
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
-
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
-
-## Acknowledgments
-
-- Thanks to the developers of the bioinformatics tools integrated into this application.
-- Special thanks to the JavaFX community for providing a robust framework for building desktop applications.
