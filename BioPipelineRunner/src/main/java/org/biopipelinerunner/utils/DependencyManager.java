@@ -101,6 +101,61 @@ public class DependencyManager {
         return instructions.toString();
     }
 
+    /**
+     * Get installation instructions for specific dependencies
+     * 
+     * @param dependencies List of dependency names
+     * @return Installation instructions as a string
+     */
+    public static String getInstallationInstructionsForSpecificDeps(List<String> dependencies) {
+        StringBuilder instructions = new StringBuilder();
+        
+        // Group missing dependencies by installation method
+        List<String> aptDependencies = new ArrayList<>();
+        List<String> pipDependencies = new ArrayList<>();
+        List<String> otherDependencies = new ArrayList<>();
+        
+        for (String dependency : dependencies) {
+            if (REQUIRED_PYTHON_PACKAGES.contains(dependency)) {
+                pipDependencies.add(dependency);
+            } else if (Arrays.asList("muscle", "trimal", "iqtree", "python3", "pip").contains(dependency)) {
+                aptDependencies.add(dependency);
+            } else {
+                otherDependencies.add(dependency);
+            }
+        }
+        
+        // APT installation instructions
+        if (!aptDependencies.isEmpty()) {
+            instructions.append("For Linux/WSL (Ubuntu/Debian), install with apt:\n");
+            instructions.append("sudo apt update && sudo apt install -y ");
+            instructions.append(String.join(" ", aptDependencies));
+            instructions.append("\n\n");
+        }
+        
+        // PIP installation instructions
+        if (!pipDependencies.isEmpty()) {
+            instructions.append("For Python packages, install with pip:\n");
+            instructions.append("pip install ");
+            instructions.append(String.join(" ", pipDependencies));
+            instructions.append("\n\n");
+        }
+        
+        // Other dependencies
+        if (!otherDependencies.isEmpty()) {
+            instructions.append("Other dependencies that need manual installation:\n");
+            for (String dep : otherDependencies) {
+                if (dep.equals("raxmlHPC-PTHREADS")) {
+                    instructions.append("- RAxML: Download from https://github.com/stamatak/standard-RAxML\n");
+                } else {
+                    instructions.append("- ").append(dep).append("\n");
+                }
+            }
+        }
+        
+        return instructions.toString();
+    }
+
     private static boolean isDependencyInstalled(String dependency) {
         try {
             Process process;
