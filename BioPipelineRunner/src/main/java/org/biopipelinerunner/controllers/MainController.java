@@ -15,6 +15,7 @@ import org.biopipelinerunner.utils.DependencyManager;
 import org.biopipelinerunner.utils.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -114,7 +115,7 @@ public class MainController {
                 try {
                     // Set status and progress
                     updateStatus("Starting pipeline...");
-                    updateProgress(0.1);
+                    updateProgressBar(0.1);
                     
                     // Run BUSCO analysis
                     updateStatus("Running BUSCO analysis...");
@@ -131,8 +132,13 @@ public class MainController {
                     buscoConfig.setLineage(buscoLineageComboBox.getValue());
                     buscoConfig.setMode(buscoModeComboBox.getValue());
                     
-                    buscoService.runBusco(buscoConfig);
-                    updateProgress(0.4);
+                    try {
+                        buscoService.runBusco(buscoConfig);
+                    } catch (IOException | InterruptedException e) {
+                        logError("BUSCO analysis failed: " + e.getMessage());
+                        throw e;
+                    }
+                    updateProgressBar(0.4);
                     
                     // Run phylogenetic analysis
                     updateStatus("Running phylogenetic analysis...");
@@ -144,7 +150,7 @@ public class MainController {
                         Runtime.getRuntime().availableProcessors(),
                         outgroupField.getText()
                     );
-                    updateProgress(0.7);
+                    updateProgressBar(0.7);
                     
                     // Generate tree visualization
                     updateStatus("Generating tree visualization...");
@@ -153,13 +159,13 @@ public class MainController {
                         outputDirPath,
                         outgroupField.getText()
                     );
-                    updateProgress(0.9);
+                    updateProgressBar(0.9);
                     
                     // Create results archive
                     updateStatus("Creating results archive...");
                     File resultsZip = new File(workingDirPath + "/" + projectName + "_results.zip");
                     FileUtils.zipDirectory(new File(outputDirPath), resultsZip);
-                    updateProgress(1.0);
+                    updateProgressBar(1.0);
                     
                     updateStatus("Pipeline completed successfully!");
                     return null;
@@ -203,7 +209,41 @@ public class MainController {
         // This could open a new window with the ResultsController
     }
     
-    private void updateProgress(double progress) {
+    /**
+     * Checks for required dependencies and shows installation instructions if any are missing.
+     * This method is called from the FXML file.
+     */
+    @FXML
+    public void checkDependencies() {
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() {
+                updateStatus("Checking dependencies...");
+                Map<String, Boolean> dependencyStatus = DependencyManager.checkDependencies();
+                
+                boolean allDependenciesInstalled = dependencyStatus.values().stream().allMatch(Boolean::booleanValue);
+                
+                if (allDependenciesInstalled) {
+                    updateStatus("All dependencies are installed correctly.");
+                } else {
+                    String instructions = DependencyManager.getInstallationInstructions(dependencyStatus);
+                    Platform.runLater(() -> {
+                        logTextArea.appendText("Missing dependencies detected. Please install them before running the pipeline.\n\n");
+                        logTextArea.appendText(instructions);
+                        
+                        showAlert("Missing Dependencies", 
+                                "Some required dependencies are missing. Check the log panel for installation instructions.");
+                    });
+                }
+                
+                return null;
+            }
+        };
+        
+        executorService.submit(task);
+    }
+    
+    private void updateProgressBar(double progress) {
         Platform.runLater(() -> progressBar.setProgress(progress));
     }
     
@@ -234,35 +274,6 @@ public class MainController {
         
         File inputDir = new File(inputDirectory);
         return inputDir.exists() && inputDir.isDirectory();
-    }
-    
-    private void checkDependencies() {
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() {
-                updateStatus("Checking dependencies...");
-                Map<String, Boolean> dependencyStatus = DependencyManager.checkDependencies();
-                
-                boolean allDependenciesInstalled = dependencyStatus.values().stream().allMatch(Boolean::booleanValue);
-                
-                if (allDependenciesInstalled) {
-                    updateStatus("All dependencies are installed correctly.");
-                } else {
-                    String instructions = DependencyManager.getInstallationInstructions(dependencyStatus);
-                    Platform.runLater(() -> {
-                        logTextArea.appendText("Missing dependencies detected. Please install them before running the pipeline.\n\n");
-                        logTextArea.appendText(instructions);
-                        
-                        showAlert("Missing Dependencies", 
-                                "Some required dependencies are missing. Check the log panel for installation instructions.");
-                    });
-                }
-                
-                return null;
-            }
-        };
-        
-        executorService.submit(task);
     }
     
     private void showAlert(String title, String content) {

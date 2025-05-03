@@ -5,6 +5,7 @@ import org.biopipelinerunner.utils.PlatformUtils;
 import org.biopipelinerunner.utils.ProcessExecutionService;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -20,7 +21,7 @@ public class BuscoService {
         this.processExecutionService = new ProcessExecutionService();
     }
 
-    public void runBusco(BuscoConfig buscoConfig) {
+    public void runBusco(BuscoConfig buscoConfig) throws IOException, InterruptedException {
         String buscoCommand = buildBuscoCommand(buscoConfig);
         processExecutionService.executeCommand(buscoCommand);
     }
@@ -63,7 +64,7 @@ public class BuscoService {
             }
             processExecutionService.executeCommand(command);
             return true;
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             return false;
         }
     }
@@ -74,7 +75,7 @@ public class BuscoService {
             // Parse output to extract lineages
             // This is a simplified version; actual implementation would parse the output
             return AVAILABLE_LINEAGES;
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             return AVAILABLE_LINEAGES; // Return default list if command fails
         }
     }

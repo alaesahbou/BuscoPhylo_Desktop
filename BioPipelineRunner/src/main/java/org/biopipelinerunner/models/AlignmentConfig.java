@@ -1,35 +1,52 @@
 package org.biopipelinerunner.models;
 
 public class AlignmentConfig {
-    private String alignmentTool;
+    private String inputPath;
+    private String outputPath;
     private int threads;
-    private String outputDirectory;
-
+    private String alignmentTool; // e.g., "mafft", "muscle"
+    
     public AlignmentConfig() {
-        // Default constructor
+        this.threads = Runtime.getRuntime().availableProcessors();
+        this.alignmentTool = "mafft";
     }
-
-    public String getAlignmentTool() {
-        return alignmentTool;
-    }
-
-    public void setAlignmentTool(String alignmentTool) {
+    
+    public AlignmentConfig(String inputPath, String outputPath, int threads, String alignmentTool) {
+        this.inputPath = inputPath;
+        this.outputPath = outputPath;
+        this.threads = threads;
         this.alignmentTool = alignmentTool;
     }
-
+    
+    public String getInputPath() {
+        return inputPath;
+    }
+    
+    public void setInputPath(String inputPath) {
+        this.inputPath = inputPath;
+    }
+    
+    public String getOutputPath() {
+        return outputPath;
+    }
+    
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
+    }
+    
     public int getThreads() {
         return threads;
     }
-
+    
     public void setThreads(int threads) {
         this.threads = threads;
     }
-
-    public String getOutputDirectory() {
-        return outputDirectory;
+    
+    public String getAlignmentTool() {
+        return alignmentTool;
     }
-
-    public void setOutputDirectory(String outputDirectory) {
-        this.outputDirectory = outputDirectory;
+    
+    public void setAlignmentTool(String alignmentTool) {
+        this.alignmentTool = alignmentTool;
     }
 }
